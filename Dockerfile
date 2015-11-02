@@ -22,6 +22,14 @@ RUN \
     curl https://packagecloud.io/install/repositories/basho/riak/script.deb.sh | bash && \
     apt-get install -y riak=${RIAK_VERSION} && \
 
+    curl -O http://s3.amazonaws.com/downloads.basho.com/riak-cs/2.1/2.1.0/ubuntu/trusty/riak-cs_2.1.0-1_amd64.deb && \
+    dpkg -i riak-cs_2.1.0-1_amd64.deb && \
+
+    curl -O http://s3.amazonaws.com/downloads.basho.com/stanchion/2.1/2.1.0/ubuntu/trusty/stanchion_2.1.0-1_amd64.deb && \
+    dpkg -i stanchion_2.1.0-1_amd64.deb && \
+
+    apt-get -y install s3cmd  && \
+
     # Cleanup
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -35,10 +43,17 @@ ADD bin/automatic_clustering.sh /etc/my_init.d/99_automatic_clustering.sh
 # Tune Riak configuration settings for the container
 RUN sed -i.bak 's/listener.http.internal = 127.0.0.1/listener.http.internal = 0.0.0.0/' /etc/riak/riak.conf && \
     sed -i.bak 's/listener.protobuf.internal = 127.0.0.1/listener.protobuf.internal = 0.0.0.0/' /etc/riak/riak.conf && \
+    sed -i.bak 's/storage_backend = */buckets.default.allow_mult = true/' /etc/riak/riak.conf && \
     echo "anti_entropy.concurrency_limit = 1" >> /etc/riak/riak.conf && \
     echo "javascript.map_pool_size = 0" >> /etc/riak/riak.conf && \
     echo "javascript.reduce_pool_size = 0" >> /etc/riak/riak.conf && \
-    echo "javascript.hook_pool_size = 0" >> /etc/riak/riak.conf
+    echo "javascript.hook_pool_size = 0" >> /etc/riak/riak.conf && \
+    sed -i.bak 's/listener = 127.0.0.1:8080/listener = 0.0.0.0:8080/' /etc/riak/riak-cs.conf && \
+    sed -i.bak 's/riak_host = 127.0.0.1:8087/riak_host = 0.0.0.0:8087/' /etc/riak/riak-cs.conf && \
+    sed -i.bak 's/anonymous_user_creation = off/anonymous_user_creation = on/' /etc/riak/riak-cs.conf && \
+    sed -i.bak 's/stanchion_host = 127.0.0.1:8085/stanchion_host = 0.0.0.0:8085/' /etc/riak/riak-cs.conf && \
+    sed -i.bak 's/stanchion_host = 127.0.0.1:8085/stanchion_host = 0.0.0.0:8085/' /etc/stanchion/stanchion.conf && \
+    sed -i.bak 's/riak_host = 127.0.0.1:8087/riak_host = 0.0.0.0:8087/' /etc/stanchion/stanchion.conf && \
 
 # Make Riak's data and log directories volumes
 VOLUME /var/lib/riak
@@ -51,5 +66,7 @@ EXPOSE 8098 8087
 # See: https://github.com/phusion/baseimage-docker#using_the_insecure_key_for_one_container_only
 RUN /usr/sbin/enable_insecure_key
 
+COPY advanced.config /etc/riak/
+
 # Leverage the baseimage-docker init system
-CMD ["/sbin/my_init", "--quiet"]
+# CMD ["/sbin/my_init", "--quiet"]
