@@ -43,17 +43,17 @@ ADD bin/automatic_clustering.sh /etc/my_init.d/99_automatic_clustering.sh
 # Tune Riak configuration settings for the container
 RUN sed -i.bak 's/listener.http.internal = 127.0.0.1/listener.http.internal = 0.0.0.0/' /etc/riak/riak.conf && \
     sed -i.bak 's/listener.protobuf.internal = 127.0.0.1/listener.protobuf.internal = 0.0.0.0/' /etc/riak/riak.conf && \
-    sed -i.bak 's/storage_backend = */buckets.default.allow_mult = true/' /etc/riak/riak.conf && \
+    sed -i.bak 's/storage_backend = bitcask/buckets.default.allow_mult = true/' /etc/riak/riak.conf && \
     echo "anti_entropy.concurrency_limit = 1" >> /etc/riak/riak.conf && \
     echo "javascript.map_pool_size = 0" >> /etc/riak/riak.conf && \
     echo "javascript.reduce_pool_size = 0" >> /etc/riak/riak.conf && \
     echo "javascript.hook_pool_size = 0" >> /etc/riak/riak.conf && \
-    sed -i.bak 's/listener = 127.0.0.1:8080/listener = 0.0.0.0:8080/' /etc/riak/riak-cs.conf && \
-    sed -i.bak 's/riak_host = 127.0.0.1:8087/riak_host = 0.0.0.0:8087/' /etc/riak/riak-cs.conf && \
-    sed -i.bak 's/anonymous_user_creation = off/anonymous_user_creation = on/' /etc/riak/riak-cs.conf && \
-    sed -i.bak 's/stanchion_host = 127.0.0.1:8085/stanchion_host = 0.0.0.0:8085/' /etc/riak/riak-cs.conf && \
+    sed -i.bak 's/listener = 127.0.0.1:8080/listener = 0.0.0.0:8080/' /etc/riak-cs/riak-cs.conf && \
+    sed -i.bak 's/riak_host = 127.0.0.1:8087/riak_host = 0.0.0.0:8087/' /etc/riak-cs/riak-cs.conf && \
+    sed -i.bak 's/anonymous_user_creation = off/anonymous_user_creation = on/' /etc/riak-cs/riak-cs.conf && \
+    sed -i.bak 's/stanchion_host = 127.0.0.1:8085/stanchion_host = 0.0.0.0:8085/' /etc/riak-cs/riak-cs.conf && \
     sed -i.bak 's/stanchion_host = 127.0.0.1:8085/stanchion_host = 0.0.0.0:8085/' /etc/stanchion/stanchion.conf && \
-    sed -i.bak 's/riak_host = 127.0.0.1:8087/riak_host = 0.0.0.0:8087/' /etc/stanchion/stanchion.conf && \
+    sed -i.bak 's/riak_host = 127.0.0.1:8087/riak_host = 0.0.0.0:8087/' /etc/stanchion/stanchion.conf
 
 # Make Riak's data and log directories volumes
 VOLUME /var/lib/riak
@@ -67,6 +67,8 @@ EXPOSE 8098 8087
 RUN /usr/sbin/enable_insecure_key
 
 COPY advanced.config /etc/riak/
+COPY setup.sh /root/
+RUN chmod +x /root/setup.sh
 
 # Leverage the baseimage-docker init system
 # CMD ["/sbin/my_init", "--quiet"]
