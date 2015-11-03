@@ -167,58 +167,33 @@ $ make stop-cluster
 Stopped the cluster and cleared all of the running containers.
 ```
 
-## POST SETUP
+### Qurius
+
+## summary
+This creates an empheral container with riak cs (s2) running. It also autmoatically creates a s3 bucket for testing. It is not reusable. API is exposed on port 8180 and look at the log for the key and secret (must be regnerated upon container creation)
+
+## Docker Commands
+* start container and show logs
+```
+docker run -e "DOCKER_RIAK_CLUSTER_SIZE=1" -p 8089 -p 8087 -p 8180:8080 --name "riak" -td qurius/riak; docker logs -f riak;
+```
+* login into container
+```
+docker exec -ti riak bash
+```
+* logs
+```
+docker logs -f riak
+```
+
+## POST SETUP INSIDE CONTAINER
 
 http://docs.basho.com/riakcs/latest/tutorials/fast-track/Building-a-Local-Test-Environment/#Installing-Your-First-Node
 
-0. start service in order
+## CONFIGURE KEY
 ```
-riak start
-stanchion start
-riak-cs start
+./root/setupkey.sh
 ```
-1. execute 
-```
-$ ./root/setup.sh
-```
-2. ssh into container
-```
-curl -XPOST http://localhost:8080/riak-cs/user \
-  -H 'Content-Type: application/json' \
-  -d '{"email":"admin@admin.com", "name":"admin"}'
-```
-3. copy key_id and key_secret into config file /etc/riak-cs/riak-cs/conf
-```
-admin.key = <key_id>
-admin.secret = <key_secret>
-```
-4. repeat with config file /etc/stanchion/stanchion.conf
-```
-admin.key = <key_id>
-admin.secret = <key_secret>
-```
-5. restart
-```
-stanchion restart
-riak-cs restart
-```
-
-## S3CMD SETUP
-1. note ip address
-```
-ifconfig
-```
-2. start s3cmd interactive config and fill in arguments
-```
-s3cmd -c ~/.s3cfg --configure
-```
-access key = <key_id>
-secret key = <key_secret>
-enter (don't set password)
-enter (don't specify gpg location)
-enter (don't use https)
-proxy server = riak cs ip
-proxy port = 8080
 
 ## TEST RIAK CS
 1. create a bucket
@@ -231,7 +206,7 @@ s3cmd ls
 ```
 3. create test file
 ```
-dd if=/dev/zero of=test_file bs=1m count=2
+dd if=/dev/zero of=test_file count=2
 s3cmd put test_file s3://test-bucket
 ```
 4. list test_file

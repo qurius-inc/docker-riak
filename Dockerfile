@@ -60,7 +60,7 @@ RUN sed -i.bak 's/listener.http.internal = 127.0.0.1/listener.http.internal = 0.
 #VOLUME /var/log/riak
 
 # Open ports for HTTP and Protocol Buffers
-EXPOSE 8098 8087
+EXPOSE 8098 8087 8080
 
 # Enable insecure SSH key
 # See: https://github.com/phusion/baseimage-docker#using_the_insecure_key_for_one_container_only
@@ -68,10 +68,8 @@ RUN /usr/sbin/enable_insecure_key
 
 COPY advanced.config /etc/riak/
 COPY setup.sh /root/
-COPY setupkey.sh /root/
 COPY s3cfg /root/.s3cfg
 RUN chmod +x /root/setup.sh
-RUN chmod +x /root/setupkey.sh
 
 # Leverage the baseimage-docker init system
 # CMD ["/sbin/my_init", "--quiet"]
