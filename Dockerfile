@@ -56,8 +56,8 @@ RUN sed -i.bak 's/listener.http.internal = 127.0.0.1/listener.http.internal = 0.
     sed -i.bak 's/riak_host = 127.0.0.1:8087/riak_host = 0.0.0.0:8087/' /etc/stanchion/stanchion.conf
 
 # Make Riak's data and log directories volumes
-VOLUME /var/lib/riak
-VOLUME /var/log/riak
+#VOLUME /var/lib/riak
+#VOLUME /var/log/riak
 
 # Open ports for HTTP and Protocol Buffers
 EXPOSE 8098 8087
@@ -68,8 +68,11 @@ RUN /usr/sbin/enable_insecure_key
 
 COPY advanced.config /etc/riak/
 COPY setup.sh /root/
+COPY setupkey.sh /root/
+COPY s3cfg /root/.s3cfg
 RUN chmod +x /root/setup.sh
+RUN chmod +x /root/setupkey.sh
 
 # Leverage the baseimage-docker init system
 # CMD ["/sbin/my_init", "--quiet"]
-CMD /root/setup.sh && /bin/bash;
+CMD /root/setup.sh;
