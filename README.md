@@ -171,6 +171,12 @@ Stopped the cluster and cleared all of the running containers.
 
 http://docs.basho.com/riakcs/latest/tutorials/fast-track/Building-a-Local-Test-Environment/#Installing-Your-First-Node
 
+0. start service in order
+```
+riak start
+stanchion start
+riak-cs start
+```
 1. execute 
 ```
 $ ./root/setup.sh

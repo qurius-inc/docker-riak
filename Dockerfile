@@ -72,3 +72,4 @@ RUN chmod +x /root/setup.sh
 
 # Leverage the baseimage-docker init system
 # CMD ["/sbin/my_init", "--quiet"]
+CMD /root/setup.sh && /bin/bash;
