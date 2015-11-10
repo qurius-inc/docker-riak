@@ -175,11 +175,11 @@ This creates an empheral container with riak cs (s2) running. It also autmoatica
 ## Docker Commands
 * restart container for the first time and show logs
 ```
-docker run -e "DOCKER_RIAK_CLUSTER_SIZE=1" -p 8089 -p 8087 -p 8180:8080 --name "riak" -td qurius/riak; docker logs -f riak;
+docker run -e "DOCKER_RIAK_CLUSTER_SIZE=1" -p 8089 -p 8087 -p 8180:8080 --name "riak" -v /var/log/riak:/var/log/riak -v /home/riak:/var/lib/riak -td qurius/riak; docker logs -f riak;
 ```
-* start container for the first time and show logs
+* start container for the **first** time (will blow away the data directory) and show logs. 
 ```
-docker run -e "DOCKER_RIAK_CLUSTER_SIZE=1" -p 8089 -p 8087 -p 8180:8080 --name "riak" -td qurius/riak setup_riak; docker logs -f riak;
+docker run -e "DOCKER_RIAK_CLUSTER_SIZE=1" -p 8089 -p 8087 -p 8180:8080 --name "riak" -v /var/log/riak:/var/log/riak -v /home/riak:/var/lib/riak -td qurius/riak setup_riak; docker logs -f riak;
 ```
 * login into container
 ```
