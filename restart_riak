@@ -6,8 +6,8 @@ chown riak:riak /var/log/riak
 rm -rf /var/lib/riak/ring/*
 
 credentialPath=/var/lib/riak/.credential
-key=$(cat $credentialPath | grep -Po 'key: \K(.*?)')
-secret=$(cat $credentialPath | grep -Po 'secret: \K(.*?)')
+key=$(cat $credentialPath | grep -Po 'key: \K(.*)')
+secret=$(cat $credentialPath | grep -Po 'secret: \K(.*)')
 
 sed -i.bak "s/riak@[0-9]*.[0-9]*.[0-9]*.[0-9]*/riak@$(hostname -i)/" /etc/riak/riak.conf
 sed -i.bak "s/riak-cs@[0-9]*.[0-9]*.[0-9]*.[0-9]*/riak-cs@$(hostname -i)/" /etc/riak-cs/riak-cs.conf

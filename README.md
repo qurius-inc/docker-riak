@@ -173,9 +173,13 @@ Stopped the cluster and cleared all of the running containers.
 This creates an empheral container with riak cs (s2) running. It also autmoatically creates a s3 bucket for testing. It is not reusable. API is exposed on port 8180 and look at the log for the key and secret (must be regnerated upon container creation)
 
 ## Docker Commands
-* start container and show logs
+* restart container for the first time and show logs
 ```
 docker run -e "DOCKER_RIAK_CLUSTER_SIZE=1" -p 8089 -p 8087 -p 8180:8080 --name "riak" -td qurius/riak; docker logs -f riak;
+```
+* start container for the first time and show logs
+```
+docker run -e "DOCKER_RIAK_CLUSTER_SIZE=1" -p 8089 -p 8087 -p 8180:8080 --name "riak" -td qurius/riak setup_riak; docker logs -f riak;
 ```
 * login into container
 ```
@@ -186,14 +190,9 @@ docker exec -ti riak bash
 docker logs -f riak
 ```
 
-## POST SETUP INSIDE CONTAINER
+## POST SETUP INSIDE CONTAINER 
 
 http://docs.basho.com/riakcs/latest/tutorials/fast-track/Building-a-Local-Test-Environment/#Installing-Your-First-Node
-
-## CONFIGURE KEY
-```
-./root/setupkey.sh
-```
 
 ## TEST RIAK CS
 1. create a bucket

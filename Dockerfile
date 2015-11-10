@@ -75,11 +75,10 @@ COPY advanced.config /etc/riak/
 COPY s3cfg /root/.s3cfg
 
 # Helper files
-COPY setup.sh /bin/
-RUN chmod +x /bin/setup.sh
-COPY restart.sh /bin/
-RUN chmod +x /bin/restart.sh
+COPY setup_riak /bin/
+RUN chmod +x /bin/setup_riak
+COPY restart_riak /bin/
+RUN chmod +x /bin/restart_riak
 
 # Leverage the baseimage-docker init system
-# CMD ["/sbin/my_init", "--quiet"]
-CMD /bin/restart.sh;
+CMD /bin/restart_riak;
