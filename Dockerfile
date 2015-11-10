@@ -1,9 +1,10 @@
 # Riak
 #
 # VERSION       1.0.5
-
+#
+# credit Hector Castro for base
 FROM phusion/baseimage:0.9.14
-MAINTAINER Hector Castro hectcastro@gmail.com
+MAINTAINER Newton Truong
 
 # Environmental variables
 ENV DEBIAN_FRONTEND noninteractive
@@ -37,6 +38,9 @@ RUN \
 RUN mkdir -p /etc/service/riak
 ADD bin/riak.sh /etc/service/riak/run
 
+RUN mkdir -p /var/lib/riak; chown -R riak:riak /var/lib/riak;
+Run mkdir -p /var/log/riak; chown -R riak:riak /var/log/riak;
+
 # Setup automatic clustering
 ADD bin/automatic_clustering.sh /etc/my_init.d/99_automatic_clustering.sh
 
@@ -66,11 +70,16 @@ EXPOSE 8098 8087 8080
 # See: https://github.com/phusion/baseimage-docker#using_the_insecure_key_for_one_container_only
 RUN /usr/sbin/enable_insecure_key
 
+# Config files
 COPY advanced.config /etc/riak/
-COPY setup.sh /root/
 COPY s3cfg /root/.s3cfg
-RUN chmod +x /root/setup.sh
+
+# Helper files
+COPY setup.sh /bin/
+RUN chmod +x /bin/setup.sh
+COPY restart.sh /bin/
+RUN chmod +x /bin/restart.sh
 
 # Leverage the baseimage-docker init system
 # CMD ["/sbin/my_init", "--quiet"]
-CMD /root/setup.sh;
+CMD /bin/restart.sh;

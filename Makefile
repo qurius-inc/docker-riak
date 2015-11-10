@@ -3,7 +3,7 @@
 all: stop-cluster riak-container start-cluster
 
 build riak-container:
-	docker build -t "qurius/riak" .
+	docker build -t "qurius/riak-s" .
 
 start-cluster:
 	./bin/start-cluster.sh
