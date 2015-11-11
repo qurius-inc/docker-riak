@@ -31,7 +31,7 @@ stanchion start;
 echo "starting riak-cs"
 riak-cs start;
 
-echo "wait 10 sec for service to start"
+echo "wait 10 sec for services to start"
 sleep 10
 
 echo "done"
