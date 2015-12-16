@@ -1,0 +1,15 @@
+#! /bin/sh
+echo "starting riak"
+riak start
+# exec /sbin/setuser riak "riak start"
+sleep 2
+echo "starting stanchion"
+stanchion start;
+sleep 2
+echo "starting riak-cs"
+riak-cs start;
+sleep 2
+echo "wait 10 sec for services to start"
+sleep 5
+riak attach
+# exec /sbin/setuser riak "riak attach"

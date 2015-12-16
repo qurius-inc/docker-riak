@@ -77,8 +77,11 @@ COPY s3cfg /root/.s3cfg
 # Helper files
 COPY setup_riak /bin/
 RUN chmod +x /bin/setup_riak
-COPY restart_riak /bin/
-RUN chmod +x /bin/restart_riak
+RUN setup_riak
+
+COPY start_riak /bin/
+RUN chmod +x /bin/start_riak
+
 
 # Leverage the baseimage-docker init system
-CMD /bin/restart_riak;
+CMD /bin/start_riak
