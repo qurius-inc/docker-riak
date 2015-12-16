@@ -82,6 +82,7 @@ RUN setup_riak
 COPY start_riak /bin/
 RUN chmod +x /bin/start_riak
 
+CMD ["sh", "-c", "start_riak; tail -f /var/log/riak/*"]
 
 # Leverage the baseimage-docker init system
 CMD /bin/start_riak
